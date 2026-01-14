@@ -1,4 +1,4 @@
-RLE Compression Tool v.01
+RLE Compression Tool v0.2
 
 A simple Run-Lenght Encoding compressor and decompressor in c++ made as a learning project
 
