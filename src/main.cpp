@@ -2,21 +2,23 @@
 #include <chrono>
 #include <filesystem>
 #include "rle.h"
+#include "lz.h"
 
 int main(int argc, char* argv[]) {
-    if (argc != 4) {
+    if (argc != 5) {
         std::cout << "Usage:\n";
-        std::cout << "  rle compress <input> <output>\n";
-        std::cout << "  rle decompress <input> <output>\n";
+        std::cout << "  <algorithm> compress <input> <output>\n";
+        std::cout << "  <algorithm> decompress <input> <output>\n";
+        std::cout << "Algorithms: rle, lz\n";
         return 1;
     }
 
-    std::string mode = argv[1];
-    std::string input = argv[2];
-    std::string output = argv[3];
+    std::string algorithm = argv[1];
+    std::string mode      = argv[2];
+    std::string input     = argv[3];
+    std::string output    = argv[4];
 
     bool success = false;
-
     uintmax_t inputSize = 0;
     uintmax_t outputSize = 0;
 
@@ -28,14 +30,24 @@ int main(int argc, char* argv[]) {
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    if (mode == "compress") {
-        std::cout << "Compressing: " << input << " -> " << output << "\n";
-        success = compressRLE(input, output);
-    } else if (mode == "decompress") {
-        std::cout << "Decompressing: " << input << " -> " << output << "\n";
-        success = decompressRLE(input, output);
+    if (algorithm == "rle") {
+        if (mode == "compress") {
+            std::cout << "RLE compressing: " << input << " -> " << output << "\n";
+            success = compressRLE(input, output);
+        } else if (mode == "decompress") {
+            std::cout << "RLE decompressing: " << input << " -> " << output << "\n";
+            success = decompressRLE(input, output);
+        }
+    } else if (algorithm == "lz") {
+        if (mode == "compress") {
+            std::cout << "LZ77 compressing: " << input << " -> " << output << "\n";
+            success = compressLZ(input, output);
+        } else if (mode == "decompress") {
+            std::cout << "LZ77 decompressing: " << input << " -> " << output << "\n";
+            success = decompressLZ(input, output);
+        }
     } else {
-        std::cerr << "Unknown mode: " << mode << "\n";
+        std::cerr << "Unknown algorithm: " << algorithm << "\n";
         return 1;
     }
 
